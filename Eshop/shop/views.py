@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
 from .models import Product,Category,Customer
 # Create your views here.
 def home(request):
@@ -19,6 +19,8 @@ def signup(request):
         password = request.POST.get('password')
         phone = request.POST.get('phone')
 
+        value = {'firstname':firstname,'lastname':lastname,'email':email,'phone':phone}
+
         error_message = None
         if (not firstname):
             error_message = 'First Name required'
@@ -37,6 +39,13 @@ def signup(request):
         if  not error_message:
             customer = Customer(first_name=firstname,last_name=lastname,email=email,password=password,phone=phone)
             customer.register()
-            return HttpResponse('signup success')
+            return redirect('home')
         else:
-            return render(request, 'shop/signup.html',{'error':error_message})
+
+            data = {
+                'error':error_message,
+                'values':value
+            }
+            return render(request,'shop/signup.html', data)
+    else:
+        return render(request, 'shop/signup.html')    
