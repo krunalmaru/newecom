@@ -13,6 +13,7 @@ class MyHome(View):
             product = Product.get_all_products()
         context = {'product':product,'categories':categories}
         print('you are',request.session.get('email'))
+        
         return render(request, 'shop/home.html',context)
 
     def post(self, request):
