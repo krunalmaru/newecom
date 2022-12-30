@@ -22,6 +22,10 @@ def signup(request):
         value = {'firstname':firstname,'lastname':lastname,'email':email,'phone':phone}
 
         error_message = None
+
+        customer = Customer(first_name=firstname,last_name=lastname,email=email,password=password,phone=phone)
+
+
         if (not firstname):
             error_message = 'First Name required'
         elif(len(firstname)<3):
@@ -34,10 +38,12 @@ def signup(request):
             error_message = 'phone Number required'
         elif len(phone) < 10:
             error_message = 'Phone Must be 10 Char'
-           
+        elif(not password):
+            error_message = 'Password Must required'
+        elif customer.isExists():
+            error_message = 'Customer Already Exist'    
 
         if  not error_message:
-            customer = Customer(first_name=firstname,last_name=lastname,email=email,password=password,phone=phone)
             customer.register()
             return redirect('home')
         else:
