@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse,redirect
 from .models import Product,Category,Customer
 from django.contrib.auth.hashers import check_password,make_password
+from django.views import View
 # Create your views here.
 
 def home(request):
@@ -67,10 +68,12 @@ def signup(request):
     else:
         return registeruser(request)
 
-def loginuser(request):
-    if request.method == 'GET':
+class Login(View):
+    def get(self, request):
         return render(request,'shop/login.html')
-    else:
+
+
+    def post(self,request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         customer = Customer.get_customer_by_email(email)
@@ -82,8 +85,11 @@ def loginuser(request):
             else:
                 error_message = 'Email or Password Invalid'
         else:
-            error_message = 'Invalid creadential s!!'    
+            error_message = 'Invalid creadential !!'    
 
         print(customer)
         print(email,password)
         return render(request, 'shop/login.html',{'error':error_message})
+
+
+       
