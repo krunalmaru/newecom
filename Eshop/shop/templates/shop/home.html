@@ -29,8 +29,8 @@
                         <p class="card-text">{{product.price}}</p>
 
                         <form action="/" method="post">
-                            {% csrf_token %}
-                            <input type="text" name="product" value="{{product.id}}" id="">
+                            {% csrf_token %} 
+                            <input type="text" hidden name="product" value="{{product.id}}" id="">
                             <input type="submit" class="btn btn-outline-primary" value="Add To Cart">
                         </form>
                         </div>

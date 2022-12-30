@@ -14,10 +14,26 @@ class MyHome(View):
         context = {'product':product,'categories':categories}
         print('you are',request.session.get('email'))
         return render(request, 'shop/home.html',context)
+
     def post(self, request):
         product = request.POST.get('product')
+        cart = request.session.get('cart')
+        if cart:
+            quantity = cart.get(product)
+            if quantity:
+                cart[product] = quantity + 1         
+            else:
+                cart[product] = 1
+        else:
+            cart ={}
+            cart[product] = 1
+        request.session['cart'] = cart    
+        print(request.session['cart'])
+        print(cart)
+        print(product)
+        return redirect('home')
 
-def home(request):
+
     
 
 # def validateCustomer(customer):
