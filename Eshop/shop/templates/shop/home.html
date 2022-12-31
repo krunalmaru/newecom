@@ -3,57 +3,67 @@
 {% block main %}
 
 <div class="container-fluid mt-5">
- <div class="row">
+    <div class="row">
         <!-- filter -->
         <div class="col-lg-2 mx-auto">
 
-                <div class="list-group">
-                    <a href="/" class="list-group-item list-group-item-action">All Products</a>
+            <div class="list-group">
+                <a href="/" class="list-group-item list-group-item-action">All Products</a>
 
                 {% for i in categories %}
-                    <a href="/?category={{i.id}}" class="list-group-item list-group-item-action">{{i.name}}</a>
+                <a href="/?category={{i.id}}" class="list-group-item list-group-item-action">{{i.name}}</a>
                 {% endfor %}
 
-                </div>
+            </div>
 
         </div>
         <!-- All Products -->
         <div id="product" class="col-lg-8 mx-auto">
             <div class="row mx-auto ">
-                {% for product in product  %}
-                
-                    <div class="card mx-auto my-2" style="width: 18rem;">
-                        <img src="{{product.image.url}}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <p class="card-title">{{product.name}}</p>
-                            <p class="card-text">{{product.description}}</p>
-                            <p class="card-text">{{product.price}}</p>
-                            <!-- {{product | is_in_cart:request.session.cart }} -->
-                     
-                        </div>
-                        <div class="card-footer p-0  no-gutters">
-                            {% if product|is_in_cart:request.session.cart %}
-                            <div class="row no-gutters">
-                                <input type="submit" value="-" class="col-2 btn btn-block btn-secondary ">
-                                <div class="text-center col">2 in cart</div>
-                                <input type="submit" value="+" class="col-2 btn btn-block btn-secondary ">
-                            </div>
-                            {% else %}
-                            <form action="/" method="post" class="btn-block">
-                                {% csrf_token %} 
-                                <input type="text" hidden name="product" value="{{product.id}}" id="">
-                                <input type="submit" class="float-right btn btn-light border form-control" value="Add To Cart">
-                            </form>
-                            {% endif %}
-                           
-                        </div>
+                {% for product in product %}
+
+                <div class="card mx-auto my-2" id = "{{product.id}}" style="width: 18rem;">
+                    <img src="{{product.image.url}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <p class="card-title">{{product.name}}</p>
+                        <p class="card-text">{{product.description}}</p>
+                        <p class="card-text">{{product.price}}</p>
+                        <!-- {{product | is_in_cart:request.session.cart }} -->
 
                     </div>
-                
+                    <div class="card-footer p-0 ">
+                        {% if product|is_in_cart:request.session.cart %}
+                        <div class="row no-gutters">
+                            <form action="/" method="post">
+                                {% csrf_token %}
+                                <input type="text" hidden name="product" value="{{product.id}}" id="">
+                                <input type="text" hidden name="remove" value="True" id="">
+                                <input type="submit" value="-" class=" btn btn-block btn-secondary ">
+                            </form>
+                            <div class="text-center col">{{product|cart_quantity:request.session.cart}} in cart</div>
+                            <form action="/#{{product.id}}" method="post">
+                                {% csrf_token %}
+                                <input type="text" hidden name="product" value="{{product.id}}" id="">
+                                <input type="submit" value="+" class=" btn btn-block btn-secondary ">
+                            </form>
+                        </div>
+                        {% else %}
+                        <form action="/#{{product.id}}" method="post" class="btn-block">
+                            {% csrf_token %}
+                            <input type="text" hidden name="product" value="{{product.id}}" id="">
+                            <input type="submit" class="float-right btn btn-light border form-control"
+                                value="Add To Cart">
+                        </form>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
                 {% endfor %}
-        
+
             </div>
         </div>
- </div>
+    </div>
 </div>
-{% endblock %} 
+{% endblock %}
