@@ -19,6 +19,10 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product/img')
 
     @staticmethod
+    def get_products_by_ids(ids):
+        return Product.objects.filter(id__in = ids)
+        
+    @staticmethod
     def get_all_products():
         return Product.objects.all()
     
@@ -48,7 +52,7 @@ class Customer(models.Model):
             return Customer.objects.get(email=email) 
         except:
             return False
-            
+
     def isExists(self):
         if Customer.objects.filter(email = self.email):
             return True
